@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "Summary": {
+      "title": "Summary",
+      "description": "Daily press summary for a specific country and date.",
+      "type": "object",
+      "properties": {
+        "dataReferencia": { "type": "string", "description": "Date of the summary." },
+        "paisId": { "type": "string", "description": "ID of the country (e.g., pt, br, au)." },
+        "paisNome": { "type": "string", "description": "Display name of the country." },
+        "tituloCapa": { "type": "string", "description": "Main title displayed on the dashboard." },
+        "status": { "type": "string", "enum": ["Hoje", "Ontem", "Arquivo"] },
+        "totalNoticias": { "type": "integer" },
+        "categorias": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "authorId": { "type": "string" }
+      },
+      "required": ["dataReferencia", "paisId", "paisNome", "tituloCapa", "status", "categorias"]
+    },
+    "News": {
+      "title": "News",
+      "description": "An individual news article within a summary.",
+      "type": "object",
+      "properties": {
+        "sinteseId": { "type": "string", "description": "Reference to the Summary document ID." },
+        "titulo": { "type": "string" },
+        "corpo": { "type": "string" },
+        "categoria": { "type": "string" },
+        "imagemUrl": { "type": "string" },
+        "ordem": { "type": "integer" },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "fonte": { "type": "string" },
+            "tiragem": { "type": "string" },
+            "periodicidade": { "type": "string" },
+            "genero": { "type": "string" },
+            "formato": { "type": "string" },
+            "data": { "type": "string" },
+            "urlOriginal": { "type": "string" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "authorId": { "type": "string" }
+      },
+      "required": ["sinteseId", "titulo", "corpo", "categoria", "metadata"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile and permissions.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "editor", "reader"] },
+        "displayName": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/summaries/{summaryId}": {
+      "schema": "Summary",
+      "description": "Collection of daily news summaries."
+    },
+    "/news/{newsId}": {
+      "schema": "News",
+      "description": "Collection of individual news articles linked to summaries."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and roles."
+    }
+  }
+}
